@@ -10,6 +10,7 @@ This is a private repository that store codes and pipeline of the courses.
 * Dingyang Li
 * Shufan Zhang
 * Yuran Qiu
+* Yuxiang Zheng
 
 ## Selected Experiments
 
