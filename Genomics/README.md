@@ -3,331 +3,115 @@ author: Zefeng Zhu
 date: 2020-09-08 09:11:02 +0800
 ---
 
-# 1-2 Ab initio prediction and structural modeling of whole genome genes
+# 实验一: 全基因组基因的从头预测及结构建模
 
-## Design
+> Ab initio prediction and structural modeling of whole genome genes
 
-![fig](https://user-images.githubusercontent.com/43134199/92424345-adc60880-f1b6-11ea-958d-b9d2f2d699c3.png)
+* 小组成员：李定洋、裘彧然、朱泽峰、张书凡、郑宇翔
+* 组长：朱泽峰
+
+
+## 实验背景
+
+DNA序列分析是后基因组时代计算生物学的一个重要领域。从上世纪九十年代至今，单单从基因组序列中进行基因结构从头算预测的计算方法在很大程度上促进了研究者对各种生物学问题的理解。虽然这方面的计算预测已经有了不少方法与对应软件，但如何为研究对象(数据)选择合适的方法、数据集下开发的软件，从而做到较为稳健与准确地预测也面临着挑战。
+
+## 选题介绍
+
+本次实验就挖掘多种模式生物基因组中的序列特征及其在基因预测中的应用进行比较性实验。主要目的是对不同的主流预测方法/软件在不同种的模式生物基因组数据集下的预测结果进行校验，并试图阐明区别所在。
+
+## 实验设计
+
+基础流程如下:
+
+<img width="600em" src="https://user-images.githubusercontent.com/43134199/92438073-bd574880-f1da-11ea-9708-c4a0e250a0d1.png">
 
 ### Organism
 
-1. 草履虫 (原生生物)
-2. 秀丽线虫 (线虫)
-3. 酵母菌 (真菌)
-4. 拟南芥 (被子植物)
+1. 草履虫(Paramecium tetraurelia) (纤毛虫)
+2. 秀丽线虫(Caenorhabditis elegans) (线虫)
+3. 酿酒酵母(Saccharomyces cerevisiae) (真菌)
 
-### Software
 
-1. Augustus
-2. Genscan
-3. GeneMark-ES/ET
+<table>
+    <tr>
+        <td>
+            <img src="https://www.yourgenome.org/sites/default/files/styles/banner/public/banners/facts/why-use-yeast-in-research/whytheyeast-01.jpg?itok=VM_6EKBR">
+        </td>
+        <td>
+            <img src="https://www.yourgenome.org/sites/default/files/styles/banner/public/banners/facts/why-use-the-worm-in-research/whytheworm02.jpg?itok=O2gzaJhY">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>酿酒酵母(Saccharomyces cerevisiae)</b>是最简单的真核生物之一。其基因组长度为12,157,105(1千万级)个碱基对，包含6692个基因(Ensembl). <a href="https://www.yourgenome.org/facts/why-use-yeast-in-research">More</a>
+        </td>
+        <td>
+            <b>秀丽隐杆线虫(Caenorhabditis elegans)</b>的基因组长度为1亿个碱基对，包含的基因数量与人类相似，约为20500个基因 (Ensembl).<a href="https://www.yourgenome.org/facts/why-use-the-worm-in-research">More</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://cdn.mos.cms.futurecdn.net/FTiXAmkM3kZzEkVkMdTZPo-970-80.jpg.webp">
+        </td>
+    <tr>
+    <tr>
+        <td>
+            <b>草履虫 (Paramecium tetraurelia)</b>具有两种细胞核:微核和大核。大约87Mbp(Ensembl)。
+        </td>
+    <tr>
+</table>
 
-### Procedures (Demo)
+#### Reference
 
-### 1. 基因组数据准备
+* <https://www.yourgenome.org>
+* <https://www.livescience.com/55178-paramecium.html>
+* <http://metazoa.ensembl.org/Adineta_vaga/Info/Index>
 
-> 下载基因组序列(FASTA 格式). 以及相应的 GFF 格式注释文件
+### 实验可行性分析
 
-```bash
-workDir="/home/student/s24/zeFengZhu/Gen/lab4"
-fastaFile="$workDir/GCA_000977265.3_Sc_YJM1342_v1_genomic.fna"
-gffFile="$workDir/GCA_000977265.3_Sc_YJM1342_v1_genomic.gff"
-```
+* 于数据库初步检索有无对应的数据资源(已完成)
+     * `GeneBank`: 裘彧然,张书凡
+     * `Ensembl`: 朱泽峰
+     * `UniProt`: 郑宇翔
+* 调研软件可用度/有无失效
+  * 李定洋,张书凡
+* 调研文献
+  * Huang Y, Chen SY, Deng F. Well-characterized sequence features of eukaryote genomes and implications for ab initio gene prediction. Comput Struct Biotechnol J. 2016;14:298-303. Published 2016 Jul 27. doi:10.1016/j.csbj.2016.07.002
 
-### 2. 从头基因预测软件的安装与测试
+### 正式实验分工
 
-#### `Augustus`
+1. 从`GenBank`数据库选择与下载下列物种的基因组序列和注释文档
+   * 草履虫(Paramecium tetraurelia) (纤毛虫)
+   * 秀丽线虫(Caenorhabditis elegans) (线虫)
+   * 酿酒酵母(Saccharomyces cerevisiae) (真菌)
+2. `UniprotKB`数据库下载这些物种所在分类的所有已知蛋白(排除该物种自身的已知蛋白)
+3. 基因预测软件：安排两人对`Augustus`等软件检索相关的评测比较的文章，并选取若干个工具，安装使用测试，解决软件使用过程中出现的问题
+4. 使用上一步选定的多个基因预测软件，对全基因组序列进行基因预测和结构建模，结果转成GFF3格式
+5. 利用`gffcompare`比较不同软件的预测结果，进行挑选与整合
+   * 解读`gffcompare`结果
+   * 两两共同特征的选择: e.g. 局部重合,完全重合
+   * 而后进行挑选与整合
+6. 将4和5的结果与1下载的原始注释文档进行比对，分析异同，评估优劣，改良
+7. 本地blast配置，用blast比对鉴别第4和5步的结果中输出的蛋白质
+8. 用`blast92gff3.pl`程序转化blast结果为gff3格式(修改参数)
+9.  利用`JBrowse`和`IGV`将注释组的注释信息可视化，比较两者优劣
 
-可用在Anaconda环境下利用Bioconda安装augustus,但仅针对Linux-64/Mac OSX-64系统而不支持Windows系统。
 
-> Bioconda is a distribution of bioinformatics software realized as a channel for the versatile Conda package manager. (https://anaconda.org/bioconda/augustus)
+* `1,2`:张书凡
+* `3,4`:裘彧然,郑宇翔
+* `5`: 李定洋,朱泽峰
+* `6`:朱泽峰,张书凡
+* `7,8`:李定洋
+* `9`:张书凡
 
-```bash
-conda install -c bioconda augustus
-```
+## 实验步骤
 
-#### `Genscan`
+### 1 `GenBank`数据库选择与下载选定物种的基因组序列和注释文档
 
 pass
 
-#### `GeneMark-ES/ET`
-
-pass
-
-
-### 3. 全基因组的从头基因预测
-
-#### 3.1 对上述每个能够进行从头预测基因的软件进行实验
-
-选择Augustus进行实验。
-
-```bash
-augustus --gff3=on --outfile=Sc_augustus_out.gff3 --species=saccharomyces_cerevisiae_S288C $fastaFile
-augustus --species=saccharomyces_cerevisiae_S288C --UTR=off --strand=both --sample=100 --keep_viterbi=true --alternatives-from-sampling=false --genemodel=partial /data/www/augpred/webdata/pred9dTmEkZ9/genome.fa --codingseq=on --exonnames=on
-
-```
-
-> 对参数存疑
-
-#### 3.2 使用该软件对第 1 步准备的基因组序列进行基因预测分析，
-
-保存 GFF 格式的预测结果，以及相应的多肽或 CDS 序列(FASTA 格式)
-得到文件：
-
-```bash
-augustus.aa
-augustus.cdsexons
-augustus.codingseq
-augustus.gbrowse
-augustus.gff
-augustus.gtf
-```
-
-### 4 从头基因预测结果的鉴别
-
-> 注： 4.1步骤在实验三中已经完成，本次实验直接采用实验三文件，下述再一次记录相关步骤。
-
-#### 4.1 已知蛋白序列
-
-根据基因组序列的物种来源，从 UniProt 数据库搜索. 下载近缘物种所有已知蛋白序列(reviewed)
-
-进入UniProt进行搜索：
-
-```bash
-# 搜索内容
-taxonomy:fungi NOT "saccharomyces cerevisiae" AND reviewed:yes
-```
-
-下载fasta格式文件：
-
-```bash
-# 得到文件
-uniprot-taxonomy_fungi+NOT+_saccharomyces+cerevisiae_+AND+reviewed_yes.fasta
-# 重命名为
-protein.fasta
-# 设置路径
-unpFastaFile="$workDir/protein.fasta"
-```
-
-#### 4.2 创建本地 BLAST 数据库
-
-使用 makeblastdb 程序，对上述 FASTA 格式的蛋白质序列进行处理，建立本地 BLAST 数据库
-
-```bash
-makeblastdb -in $unpFastaFile -input_type fasta -title uniprot_protein -dbtype prot -out uniprot_protein
-```
-
-输出如下：
-
-```bash
-Building a new DB, current time: 11/14/2019 17:06:57
-New DB name:   /home/student/s24/zeFengZhu/Gen/lab4/uniprot_protein
-New DB title:  uniprot_protein
-Sequence type: Protein
-Keep Linkouts: T
-Keep MBits: T
-Maximum file size: 1000000000B
-Adding sequences from FASTA; added 24905 sequences in 2.86177 seconds.
-```
-
-#### 4.3 从GFF文档中提取FASTA序列
-
-##### GFF中序列格式范例
-
-```bash
-# start gene g1
-...
-# protein sequence = [MVKLTSIAAGQITSSITSSRPIITPFYPSNGTSVISSSVISSSVISSSVTSSL...
-# SIFSESS...
-...
-# TTEITKQTTETTKQTTETTKQTTVVTIFSCESDVCSKTASPAIVSTSTATINDVTTEYTTWCPISTTESRQQT...]
-# end gene g1
-```
-
-可以看到，FASTA序列记录的模式可以总结为:
-
-```python
-startwith = "# protein sequence = \[([A-z]+)" # # coding sequence = \[([a-z]+)
-content = "([A-z]+)"
-endwith = "# ([A-z]+)]"
-endkey = "end gene ([A-z0-9]+)"
-```
-
-##### 提取序列函数
-
-```python
-def ExtractSeqFromGFF3(text, startwith=r"# protein sequence = \[([A-z]+)", content="([A-z]+)", endwith="([A-z]+)]", endKey="end gene ([A-z0-9]+)"):
-    assert isinstance(text, (Iterable, Iterator)), "Invalid Object"
-
-    startwith, content, endwith, endKey = (re.compile(i) for i in (startwith, content, endwith, endKey))
-    flag, endToken, seq = 0, 0, ""
-
-    for line in text:
-        startToken = startwith.search(line)
-        if startToken is not None:
-            flag = 1
-            seq += startToken.group(1)
-        if flag:
-            endToken = endwith.search(line)
-            if endToken is not None:
-                flag = 0
-            if startToken is None:
-                seq += content.search(line).group(1)
-        elif endToken is not None:
-            key = endKey.search(line)
-            if key is not None:
-                yield key.group(1), seq
-                endToken, seq = 0, ""
-
-
-def toFASTA(name, seq):
-    return ">{name}\n{seq}\n".format(name=name, seq=seq)
-
-
-def script(inPath, outPath, mode):
-    with open(inPath, "rt") as inFile:
-        with open(outPath, "wt") as outFile:
-            if mode == "gene":
-                g = ExtractSeqFromGFF3(inFile, startwith=r"# coding sequence = \[([a-z]+)")
-            else:
-                g = ExtractSeqFromGFF3(inFile)
-            for name, seq in g:
-                outFile.write(toFASTA(name, seq[:-1]))
-
-
-if __name__ == "__main__":
-    script("Sc_augustus_out.gff3", "augustus_gene.fasta", "gene")
-    script("Sc_augustus_out.gff3", "augustus_protein.fasta", "protein")
-```
-
-提取出预测基因序列文件：```augustus_gene.fasta```; 蛋白序列文件：```augustus_protein.fasta```
-
-#### 4.4 使用合适的 blast 程序对该预测基因与已知蛋白序列进行比对,以此来鉴别从头预测出来的基因
-
-> 只保留打分最高的一条结果，由```max_target_seqs```指定
-
-```bash
-nohup blastx -query ./augustus_gene.fasta -db uniprot_protein -out ./Sc_blastx_gene_results.outfmt6 -evalue 1e-5 -outfmt 6 -max_target_seqs 1 -num_threads 10 > nohup_blastx_gene.out &
-# 或
-nohup blastp -query ./augustus_protein.fasta -db uniprot_protein -out ./Sc_blastp_gene_results.outfmt6 -evalue 1e-5 -outfmt 6 -max_target_seqs 1 -num_threads 10 > nohup_blastp_gene.out &
-```
-
-
-#### 4.5 把 4.4 结果合并到 3.2 获得的 GFF 格式结果中
-
-使用相似性蛋白的缩写名称，替换原来预测的基因名称(模仿实验 3 格式转换后的 GFF 文档)，保存为一个新的 GFF 文档。
-
-```bash
-perl blast92gff3.pl Sc_blastx_gene_results.outfmt6 > Sc_blastx_gene_results.gff
-# Summary of HSPs saved
-# ALL saved = 4498
-# other saved = 4498
-```
-
-##### 信息整合脚本
-
-```py
-def getMapping(filePath):
-    dfrm_gff = pd.read_csv(filePath, sep="\t", header=None, skiprows=1)
-    unp_pattern = re.compile("sp:([A-z0-9_\|]+)")
-    gene_pattern = re.compile("Target=([A-z0-9]+)")
-
-    di = {}
-
-    for index in dfrm_gff.index:
-        gene = gene_pattern.search(dfrm_gff.loc[index, 8]).group(1)
-        di[gene] = unp_pattern.search(dfrm_gff.loc[index, 0]).group(1)
-
-    return di
-
-def updateGFF(inPath, outPath, di):
-    with open(inPath, "rt") as inFile:
-        with open(outPath, "wt") as outFile:
-            startwith = re.compile("# start gene ([A-z0-9]+)")
-            flag = 0
-            for line in inFile:
-                startToken = startwith.search(line)
-                if startToken is not None:
-                    flag = 1
-                    key = startToken.group(1)
-                    outFile.write(line)
-                    continue
-                if flag:
-                    line = line[:-1] + ";%s\n" % di.get(key, "")
-                    flag = 0
-                outFile.write(line)
-
-
-di = getMapping("Sc_blastx_gene_results.gff")
-addNota("Sc_augustus_out.gff3", "augustus_addNota.gff", di)
-```
-
-变量```di```即可具体查看匹配上基因的情况，进行统计。
-
-得到加入了蛋白缩写名称的augustus结果```augustus_addNota.gff```。
-
-### 5. 从头预测结果的评估
-
-#### 5.1 gffcompare对比
-
-使用 gffcompare 工具把第 4 步结果与 1.1 步原始 GFF 数据以及实验 3 结果进行比较， 查看结果，并分析它们之间的异同之处。
-
-```bash
-gffcompare -V -r $gffFile ./augustus_addNota.gff -o ./Sc_augustus_out_addNota
-```
-
-得到下列文件：
-
-```bash
-Sc_augustus_out_addNota.annotated.gtf
-Sc_augustus_out_addNota.augustus_addNota.gff.refmap
-Sc_augustus_out_addNota.augustus_addNota.gff.tmap
-Sc_augustus_out_addNota.loci
-Sc_augustus_out_addNota.stats
-Sc_augustus_out_addNota.tracking
-```
-
-#### 5.2 gffcompare结果解析
-
-提取```Sc_augustus_out_addNota.stats```内容如下：
-
-|| Sensitivity | Precision  |
--|-|-
-Base level|    99.5     |    95.6    |
-Exon level|    93.7     |    88.8    |
-Intron level|    72.4     |    50.1    |
-Intron chain level|    71.9     |    52.4    |
-Transcript level|    95.4     |    92.0    |
-Locus level|    95.5     |    92.0    |
--|-|-
-Matching intron chains|164|
-Matching transcripts|4956|
-Matching loci|4955|
--|-|-
-Missed exons|48/5434|(0.9%)
-Novel exons|333/5730|(5.8%)
-Missed exons|21/239|(8.8%)
-Missed exons|125/345|(36.2%)
-Missed exons|0/5187|(0.0%)
-Missed exons|251/5385|(4.7%)
-
-
-![fig](https://github.com/NatureGeorge/ProBioinformatics/raw/master/Omics/Genomics/final/figs/GFF.png "Fig of GFF")
-
-可以知道，GFF文档相当于在检验BLAST比对找到的UniProt与基因组GFF注释文档里的UniProt的结果接近程度。且视基因组GFF注释文档内容皆为真。
-
-* Base Level：在相同坐标上报告的外显子碱基的数目情况
-  * Sensitivity：高达99.5%，说明BLAST结果在该水平上结果找到了绝大部分基因组注释文档中的内容，极少数碱基根本没有被任何预测的转录本(transfrags)外显子所覆盖
-  * Precision：达95.6%，说明BLAST结果在该水平上有一小部分(4.4%)碱基被预测的转录本外显子覆盖但未被任何参考转录本外显子覆盖
-* Exon level：两文件基因组上的外显子间隔交集情况
-  * 可以看到预测基因结果的外显子与基因组注释文档的外显子边界有一定小差异
-* Intron level：内含子间隔
-  * 预测基因的内含子边界有不少与基因组注释文档存在差异，且错误预测了更多内含子，Precision仅50.1%
-* Transcript level：预测转录本与参考转录本间的匹配情况
-  * 转录水平是匹配良好，但也有少数"误差"
-* Locus level：观察到的基因座(外显子重叠的转录物簇)与构建的参考基因座的相似匹配情况
-  * 基因座位置也匹配良好，但也有少数"误差"
-
-## Division of tasks
-
-pass
+### 2 `UniprotKB`数据库下载选定物种所在分类的所有已知蛋白
+
+* 草履虫：`taxonomy:ciliophora NOT "paramecium tetraurelia" AND reviewed:yes`
+* 线虫：`taxonomy:nematoda NOT "caenorhabditis elegans" AND reviewed:yes`
+* 酵母：`taxonomy:fungi NOT "saccharomyces cerevisiae" AND reviewed:yes`
