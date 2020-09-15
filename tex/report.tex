@@ -1,0 +1,99 @@
+%-- coding: UTF-8 --
+\documentclass[12pt]{ctexart}
+
+%\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\geometry{a4paper,scale=0.8}
+
+\date{} %2020-09-15
+\usepackage[algo2e, linesnumbered,ruled,lined]{algorithm2e}
+\usepackage{algpseudocode}  
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+ \usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{algorithm}  
+\usepackage{subcaption}
+\usepackage{ulem}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{proof}{Proof}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}  
+\renewcommand{\algorithmicensure}{\textbf{输出:}}  
+
+\begin{document}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.1]{report_cover.png}
+\end{figure}
+
+
+\begin{center}
+    \Huge{《生物信息技能训练》实验记录}
+\end{center}
+
+~\\~\\~\\~\\
+
+
+\begin{center}
+  \begin{tabular}{l}
+  \Large{学\quad 院:\uline{\quad \quad \quad \quad \quad 医学部\quad \quad \quad\quad \quad \quad \quad }}~\\~\\
+  \Large{专\quad 业:\uline{\quad \quad \quad \quad \quad 生物信息学\quad \quad \quad \quad \quad }}~\\~\\
+  \Large{姓\quad 名:\uline{\quad \quad \quad \quad \quad 朱泽峰\quad \quad \quad\quad \quad \quad \quad  }}~\\~\\
+  \Large{学\quad 号:\uline{\quad \quad \quad \quad \quad 1730416009\quad\quad  \quad\quad \quad\quad}}~\\~\\
+  \Large{题\quad 目:\uline{全基因组基因的从头预测及结构建模}}~\\~\\
+  \Large{组\quad 号:\uline{\quad \quad  \quad\quad \quad 小组2\quad \quad \quad\quad\quad\quad\quad}}~\\~\\
+  \Large{组\quad 长:\uline{\quad \quad \quad \quad \quad 朱泽峰\quad \quad \quad\quad \quad \quad \quad}}~\\~\\
+  \Large{组\quad 员:\uline{李定洋、裘\hbox{\scalebox{1}[1]{或}\kern-.3em\scalebox{0.3}[0.7]{彡}}然、张书凡、郑宇翔}}~\\~\\
+  \end{tabular}
+\end{center}
+\begin{center}
+    \Large{2020年9月15日}
+\end{center}
+
+\title{全基因组基因的从头预测及结构建模}
+
+\maketitle
+
+\begin{abstract}
+DNA序列分析是后基因组时代计算生物学的一个重要领域。从上世纪九十年代至今，单单从基因组序列中进行基因结构从头算预测的计算方法在很大程度上促进了研究者对各种生物学问题的理解。虽然这方面的计算预测已经有了不少方法与对应软件，但如何为研究对象(数据)选择合适的方法、数据集下开发的软件，从而做到较为稳健与准确地预测也面临着挑战。
+
+本次实验就挖掘多种模式生物基因组中的序列特征及其在基因预测中的应用进行比较性实验。主要目的是对不同的主流预测方法/软件在不同种的模式生物基因组数据集下的预测结果进行校验，并试图阐明区别所在。
+  
+  
+\end{abstract}
+{\footnotesize {\bf 关键词}：全基因组从头预测; 全基因组结构建模; 模式生物；非模式生物}
+
+\newpage
+
+\tableofcontents 
+
+\newpage
+
+\section{简介}
+
+    DNA序列分析是后基因组时代计算生物学的一个重要领域。从上世纪九十年代至今，单单从基因组序列中进行基因结构从头算预测的计算方法在很大程度上促进了研究者对各种生物学问题的理解。虽然这方面的计算预测已经有了不少方法与对应软件，但如何为研究对象(数据)选择合适的方法、数据集下开发的软件，从而做到较为稳健与准确地预测也面临着挑战。
+
+    本次实验就挖掘多种模式生物基因组中的序列特征及其在基因预测中的应用进行比较性实验。主要目的是对不同的主流预测方法/软件在不同种的模式生物基因组数据集下的预测结果进行校验，并试图阐明区别所在。 
+\section{任务分工}
+
+   DNA序列分析是后基因组时代计算生物学的一个重要领域。从上世纪九十年代至今，单单从基因组序列中进行基因结构从头算预测的计算方法在很大程度上促进了研究者对各种生物学问题的理解。虽然这方面的计算预测已经有了不少方法与对应软件，但如何为研究对象(数据)选择合适的方法、数据集下开发的软件，从而做到较为稳健与准确地预测也面临着挑战。
+   
+    \subsection{任务分工一}
+    本次实验就挖掘多种模式生物基因组中的序列特征及其在基因预测中的应用进行比较性实验。主要目的是对不同的主流预测方法/软件在不同种的模式生物基因组数据集下的预测结果进行校验，并试图阐明区别所在。
+    
+    \subsection{任务分工二}
+    本次实验就挖掘多种模式生物基因组中的序列特征及其在基因预测中的应用进行比较性实验。主要目的是对不同的主流预测方法/软件在不同种的模式生物基因组数据集下的预测结果进行校验，并试图阐明区别所在。
+    
+    \subsection{任务分工三}
+    本次实验就挖掘多种模式生物基因组中的序列特征及其在基因预测中的应用进行比较性实验。主要目的是对不同的主流预测方法/软件在不同种的模式生物基因组数据集下的预测结果进行校验，并试图阐明区别所在。
+
+
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}
