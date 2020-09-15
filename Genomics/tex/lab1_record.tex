@@ -1,0 +1,551 @@
+%-- coding: UTF-8 --
+\documentclass[12pt]{ctexart}
+
+%\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\geometry{a4paper,scale=0.8}
+
+\date{} %2020-09-15
+\usepackage[algo2e, linesnumbered,ruled,lined]{algorithm2e}
+\usepackage{algpseudocode}  
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+ \usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{algorithm}  
+\usepackage{subfigure}
+\usepackage{outlines}
+\usepackage{ulem}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx,ragged2e,booktabs,caption}
+\newcolumntype{C}[1]{>{\Centering}m{#1}}
+\renewcommand\tabularxcolumn[1]{C{#1}}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{frame=tb,
+  language=bash,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{proof}{Proof}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}  
+\renewcommand{\algorithmicensure}{\textbf{输出:}}  
+\newcommand{\yu}{\hbox{\scalebox{1}[1]{或}\kern-.3em\scalebox{0.3}[0.7]{彡}}}
+
+\begin{document}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.1]{figs/report_cover.png}
+\end{figure}
+
+
+\begin{center}
+    \Huge{《生物信息技能训练》实验记录}
+\end{center}
+
+~\\~\\~\\~\\
+
+
+\begin{center}
+  \begin{tabular}{l}
+  \Large{学\quad 院:\uline{\quad \quad \quad \quad \quad 医学部\quad \quad \quad\quad \quad \quad \quad }}~\\~\\
+  \Large{专\quad 业:\uline{\quad \quad \quad \quad \quad 生物信息学\quad \quad \quad \quad \quad }}~\\~\\
+  \Large{姓\quad 名:\uline{\quad \quad \quad \quad \quad 朱泽峰\quad \quad \quad\quad \quad \quad \quad  }}~\\~\\
+  \Large{学\quad 号:\uline{\quad \quad \quad \quad \quad 1730416009\quad\quad  \quad\quad \quad\quad}}~\\~\\
+  \Large{题\quad 目:\uline{全基因组基因的从头预测及结构建模}}~\\~\\
+  \Large{组\quad 号:\uline{\quad \quad  \quad\quad \quad 小组2\quad \quad \quad\quad\quad\quad\quad}}~\\~\\
+  \Large{组\quad 长:\uline{\quad \quad \quad \quad \quad 朱泽峰\quad \quad \quad\quad \quad \quad \quad}}~\\~\\
+  \Large{组\quad 员:\uline{李定洋、裘\yu 然、张书凡、郑宇翔}}~\\~\\
+  \end{tabular}
+\end{center}
+\begin{center}
+    \Large{2020年9月15日}
+\end{center}
+
+\title{全基因组基因的从头预测及结构建模}
+
+\maketitle
+
+\begin{abstract}
+DNA序列分析是后基因组时代计算生物学的一个重要领域。从上世纪九十年代至今，单单从基因组序列中进行基因结构从头算预测的计算方法在很大程度上促进了研究者对各种生物学问题的理解。虽然这方面的计算预测已经有了不少方法与对应软件，但如何为研究对象(数据)选择合适的方法、数据集下开发的软件，从而做到较为稳健与准确地预测也面临着挑战。
+
+本次实验就挖掘多种模式生物基因组中的序列特征及其在基因预测中的应用进行比较性实验。主要目的是对不同的主流预测方法/软件在不同种的模式生物基因组数据集下的预测结果进行校验，并试图阐明区别所在。
+  
+  
+\end{abstract}
+{\footnotesize {\bf 关键词}：全基因组从头预测; 全基因组结构建模; 模式生物；非模式生物}
+
+\newpage
+
+\tableofcontents 
+
+\newpage
+
+\section{实验设计}
+
+\subsection{前期调研}
+
+\subsubsection{Organism}
+
+鉴于此次实验目的在于比较不同软件对不同物种尤其的模式生物以及非模式生物的预测结果的差异，我们组经过调研，决定选用一种常被用于数据训练的模式生物，一种略少见的模式生物以及一种非模式生物。在考虑了数据可用性以及实验可行性方面，最终确定如下物种:
+
+\begin{itemize}
+    \item [1.] 酿酒酵母(Saccharomyces cerevisiae) (真菌)
+    \item [2.] 秀丽线虫(Caenorhabditis elegans) (线虫)
+    \item [3.] 草履虫(Paramecium tetraurelia) (纤毛虫)
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\subfigure[Saccharomyces cerevisiae]{
+\includegraphics[width=5.5cm]{figs/whytheyeast-01.jpg}
+%\caption{fig1}
+}
+\quad
+\subfigure[Caenorhabditis elegans]{
+\includegraphics[width=5.5cm]{figs/whytheworm02.jpg}
+}
+\quad
+\subfigure[Paramecium tetraurelia]{
+\includegraphics[width=5.5cm]{figs/FTiXAmkM3kZzEkVkMdTZPo-970-80.jpg}
+}
+\caption{ 所选物种}
+\end{figure}
+
+选定理由如下:酿酒酵母(Saccharomyces cerevisiae)是最简单的真核生物之一，其基因组长度为12,157,105(1千万级)个碱基对，包含6692个基因(Ensembl);秀丽隐杆线虫(Caenorhabditis elegans)的基因组长度为1亿个碱基对，包含的基因数量与人类相似，约为20500个基因 (Ensembl)；草履虫 (Paramecium tetraurelia)具有两种细胞核:微核和大核，大约87Mbp(Ensembl)。
+
+同时，我们小组成员在实验正式开始之前已于数据库初步检索有无对应的数据资源，具体调研分工如下:
+
+\begin{itemize}
+    \item [1.] GeneBank:裘\yu 然,张书凡
+    \item [2.] Ensembl:朱泽峰
+    \item [3.] UniProt:郑宇翔
+    \item [4.] 调研软件可用度/有无失效:李定洋,张书凡
+    \item [5.] 文献调研\citep{10.1016/j.csbj.2016.07.002}:朱泽峰
+\end{itemize}
+
+\subsubsection{Software}
+
+根据相关文献\citep{10.1093/nar/gki937}的记录与比较，我们起初选择了Augustus、GeneMark-ES与GeneScan进行基因从头预测。但在实际使用过程中，我们发现GeneScan的本地化相对难以使用。因此我们最终决定将GeneScan更换为Geneid。最终所选软件如下:
+
+\begin{itemize}
+    \item [1.] Augustus
+    \item [2.] GeneMark-ES
+    \item [3.] Geneid
+\end{itemize}
+
+\subsection{实验流程设计}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.45]{figs/genomics_lab1_fig3.png}
+\caption{实验流程图}
+\label{fig:任务流程图}
+\end{figure}
+
+\begin{outline}[enumerate]
+ \1 于GenBank数据库选择与下载下列物种的基因组序列和注释文档
+   \2 Saccharomyces cerevisiae
+   \2 Caenorhabditis elegans
+   \2 Paramecium tetraurelia
+ \1 于UniprotKB数据库下载这些物种所在分类的所有已知蛋白(排除该物种自身的已知蛋白)
+ \1 基因预测软件：安排两人对Augustus等软件检索相关的评测比较的文章，并选取若干个工具，安装使用测试，解决软件使用过程中出现的问题
+ \1 使用上一步选定的多个基因预测软件，对全基因组序列进行基因预测和结构建模，结果转成GFF3格式
+ \1 利用gffcompare软件比较不同软件的预测结果，进行挑选与整合
+    \2 解读gffcompare结果
+    \2  两两共同特征的选择: e.g. 局部重合,完全重合
+    \2 而后进行挑选与整合
+ \1 将4和5的结果与1下载的原始注释文档进行比对，分析异同，评估优劣，改良
+ \1 本地blast配置，用blast比对鉴别第4和5步的结果中输出的蛋白质
+ \1 用blast92gff3.pl程序转化blast结果为gff3格式(修改参数)
+ \1 利用JBrowse和IGV将注释组的注释信息可视化，比较两者优劣
+\end{outline}
+   
+\subsubsection{任务分工}
+
+\begin{itemize}
+    \item [1,2]:张书凡
+    \item [3,4]:裘\yu 然,郑宇翔
+    \item [5,]:李定洋,朱泽峰
+    \item [6,]:朱泽峰,张书凡
+    \item [7,8]:李定洋
+    \item [9,]:张书凡
+\end{itemize}
+
+\section{软硬件}
+
+操作系统与运行环境等参数
+
+\begin{outline}[enumerate]
+\1 操作平台：阿里云服务器
+\1 平台配置：双核2.40GHz CPU,4GiB内存
+\1 操作系统：Ubuntu 20.04 (64bit)
+\1 使用软件：
+    \2 Augustus 3.3
+    \2 GeneMark-ES ver 4.*
+    \2 Geneid 1.2
+    \2 Gffread
+\1 编程语言
+    \2 Python3
+    \2 Perl
+    \2 R
+    \2 Shell Script
+\end{outline}
+
+
+\section{实验步骤}
+
+\subsection{GenBank数据库选择与下载选定物种的基因组序列和注释文档}
+
+从NCBI的Genome数据库下载草履虫、秀丽线虫、酵母菌的基因组序列和GFF格式的注释信息，搜索地址如下：
+
+\begin{outline}[enumerate]
+\1 酵母菌（Saccharomyces cerevisiae）
+\2 https://www.ncbi.nlm.nih.gov/genome/?term=Saccharomyces+cerevisiae
+\1 秀丽线虫（Caenorhabditis elegans）
+\2 https://www.ncbi.nlm.nih.gov/genome/?term=Caenorhabditis+elegans
+\1 草履虫（Paramecium tetraurelia）
+\2 https://www.ncbi.nlm.nih.gov/genome/275
+\end{outline}
+
+\subsection{UniprotKB数据库下载选定物种所在分类的所有已知蛋白}
+
+从UniPort数据库下载下面三个物种所在分类的所有已知蛋白（排除该物种自身的已知蛋白质）。草履虫属于纤毛亚门，秀丽线虫属于线虫门，酵母菌属于真菌界。搜索关键词如下：
+
+\begin{outline}[enumerate]
+\1 酵母：`taxonomy:fungi NOT "saccharomyces cerevisiae" AND reviewed:yes`
+\1 线虫：`taxonomy:nematoda NOT "caenorhabditis elegans" AND reviewed:yes
+\1 草履虫：`taxonomy:ciliophora NOT "paramecium tetraurelia" AND reviewed:yes`
+\end{outline}
+
+\subsection{基因预测软件的检索、下载与安装}
+
+选定如下软件的理由参见上述。
+
+在其他小组成员分别利用Augustus,Geneid,GeneMark三个物种的基因组数据进行分析后，得到了软件输出的GFF与GTF格式文件。预先设定的分析流程是按照Augustus的GFF输出文件内容来安排，即提取其中的蛋白序列信息于建立好的blast数据库进行搜索，找到对应的UniProt条目进而重注释例如Augustus输出的结果，方便后续进行对比分析。但是在实际实验过程中发现，Geneid,GeneMark最新版本输出结果中(GFF3格式或GTF格式文件)没有所需的蛋白序列信息。因此安排负责同学对软件参数与版本进行调查，最终决定回退至特定版本，以获得序列信息。(by 朱泽峰)
+
+\subsubsection{Augustus的下载与安装 (by 郑宇翔)}
+
+软件下载:(http://bioinf.uni-greifswald.de/augustus/binaries)
+
+在Github或者Augustus的官网下载地址中获得最新版本的Augustus软件\citep{10.1093/nar/gki458}，由于使用的是云服务器，可有多种方式下载安装Augustus，但wget或从git上clone的方式受限于服务器带宽，于是选择在官网下载地址直接下载至本地，并上传至服务器。
+
+进入服务器的软件压缩包存放目录执行以下代码：
+
+\begin{lstlisting}
+# 解压缩
+$ tar zxf augustus-3.3.3.tar.gz  
+$ cd augustus-3.3.3
+$ cd src  
+# 编译安装
+$ make 
+\end{lstlisting}
+
+安装完毕后可以将Augustus路径添加至环境变量中(包括Config路径)，方便使用：
+
+\begin{lstlisting}
+export AUGUSTUS_CONFIG_PATH=/root/augustus-3.3.3/config/
+export PATH=$PATH:/root/augustus-3.3.3/bin:/root/augustus-3.3.3/scripts
+\end{lstlisting}
+
+直接输入augustus测试可用性：
+
+\begin{lstlisting}
+root@iZ2ze8zvy13uv2pb8yq4gcZ:~# augustus
+AUGUSTUS (3.3.3) is a gene prediction tool
+written by M. Stanke, O. Keller, S. König, L. Gerischer and L. Romoth.
+
+usage:
+augustus [parameters] --species=SPECIES queryfilename
+
+'queryfilename' is the filename (including relative path) to the file containing the query sequence(s)
+in fasta format.
+
+SPECIES is an identifier for the species. Use --species=help to see a list.
+# 参数下略
+\end{lstlisting}
+
+\subsubsection{GeneMark-ES的下载与安装 (by 裘yu然)}
+
+软件下载:(http://topaz.gatech.edu/GeneMark/license\_download.cgi)
+
+在GeneMark的官网上找到下载地址，选择对应的版本和操作系统并填写网页下方的表单信息（对学术用户免费），得到软件压缩包和用户key\citep{10.1093/nar/gki937}。
+
+将安装包与key一同上传于服务器中，解压缩安装包后执行以下命令导入key(同时确保key文件在用户根目录下)：
+
+\begin{lstlisting}
+$ cp gm_key ~/.gm_key
+\end{lstlisting}
+
+由于GeneMark使用了Perl语言编写，需要安装相关的Perl模块，根据其安装说明文档则有如下模块需要安装：
+
+\begin{lstlisting}
+The following Perl modules are required:
+   YAML
+   Hash::Merge
+   Logger::Simple
+   Parallel::ForkManager
+   MCE::Mutex
+   Thread::Queue
+   threads
+\end{lstlisting}
+
+同时也提供了多种安装方式的建议，这里我们使用了Cpanm模块来进行模块的安装，安装示例如下：
+
+\begin{lstlisting}
+$ cpan App::cpanminus
+$ cpanm YAML
+\end{lstlisting}
+
+在所有依赖安装完毕且key设置成功的情况下，运行软件目录下的check\_install.bash来确认安装是否有模块缺失和错误：
+
+\begin{lstlisting}
+root@iZ2ze0yrfbj6dp6da7ebwvZ:~/gmes_linux_64# sh check_install.bash
+Checking GeneMark-ES installation
+All required components for GeneMark-ES were found
+\end{lstlisting}
+
+根据信息显示所有依赖模块都已安装完毕，可进行下一步测试。
+
+测试可用性（by 裘\yu 然）
+
+在软件目录存在一个用于测试的GeneMark-E-tests目录，用于测试包括ES步骤在内的EP功能是否可用，根据其内部的说明文档来运行这个例子：
+
+\begin{lstlisting}
+# 创建测试目录,并执行GeneMark-EP(使用核心数根据CPU实际情况进行调整)
+mkdir test; cd test
+../../../gmes_petap.pl --seq ../input/genome.fasta –EP --dbep ../input/proteins.fasta --verbose --cores=2 --max\_intergenic 10000
+# 如果软件安装正常，则会在output文件夹中输出genemark.gtf结果文件
+
+\end{lstlisting}
+\subsubsection{Geneid的下载与安装(by 郑宇翔)}
+软件下载:(https://github.com/guigolab/geneid)
+
+该软件的安装步骤较为简略，直接在Geneid的git页面中即可找到安装说明，将Geneid的压缩包clone至服务器或直接下载后上传，按照以下步骤完成安装\citep{doi:10.1002/0471250953.bi0403s18}：
+\begin{lstlisting}
+tar -zxvf geneid.tar.gz
+# 移动至geneid根目录
+# 编译geneid
+make 
+# 测试并查看geneid的参数帮助
+bin/geneid –h
+NAME
+        geneid - a program to annotate genomic sequences
+SYNOPSIS
+        geneid  [-bdaefitxsz]
+                [-D] [-Z]
+                [-G] [-X] [-M] [-m]
+                [-WCF] [-o]
+                [-O <gff_exons_file>]
+                [-R <gff_annotation-file>]
+                [-S <gff_homology_file>]
+                [-P <parameter_file>]
+                [-E exonweight]
+                [-Bv] [-h]
+                <locus_seq_in_fasta_format>
+RELEASE
+        geneid v 1.2a
+# 剩余参数显示略 
+
+
+\end{lstlisting}
+
+\subsection{全基因组序列的基因从头预测与结构建模(by 郑宇翔、裘yu然)}
+
+\subsubsection{Augustus的基因从头预测与结构建模(by 裘yu然、酵母by郑宇翔)}
+将三个物种的原始基因组序列文件上传至服务器，分别放在独立的文件夹中准备进行基因从头预测步骤，执行基因预测的代码如下：
+\begin{lstlisting}
+nohup augustus --gff3=on --outfile=Sc_augustus_out.gff3 --species=saccharomyces_cerevisiae_S288C --stopCodonExcludedFromCDS=FALSE Sac_cerevisiae.fna &
+
+nohup augustus --gff3=on --outfile=elegant_augustus_out.gff3 --species=caenorhabditis --stopCodonExcludedFromCDS=FALSE cae_elegans.fna &
+
+nohup augustus --gff3=on --outfile=para_augustus_out.gff3 --species=tetrahymena --stopCodonExcludedFromCDS=FALSE paramecium_tetra.fna &
+\end{lstlisting}
+
+问题解决（by 裘\yu 然）:
+
+在尝试运行之前，遇到了草履虫在备选的物种列表中不存在的问题。但是在备选列表中找到了和草履虫亲缘关系很近的四膜虫（tetrahymena），并且四膜虫与草履虫等其他纤毛虫一样，具有双元核型（nuclear dimorphism），因此选择了这个物种参数进行替代。
+
+代码运行过程中，我们还遇到了Segmentation Fault的报错问题，于是我们在git的issue中寻找，发现很多用户也出现了类似的情况。起初认为是内存溢出问题，但在选用了两条染色体执行的情况下依旧会出现这个报错。最后经过排查是系统版本影响，在Ubuntu 18.04(64bit)版本的情况下基因组规模较大的情况就会出现该错误，于是最后换用了Ubuntu 20.04(64bit)版本成功重新执行代码。
+
+结果整理（by 裘\yu 然）:
+
+由于参数设置了输出格式为gff3，并且文件中带有蛋白质序列信息（重要），可以直接等待后一步骤的提取，将结果分别存放至独立的文件夹中等待下一步操作。Augustus的最终预测结果基因数目如下：
+
+\begin{minipage}{\linewidth}
+\centering
+\captionof{table}{Augustus最终预测结果基因数目} \label{tab:title} 
+\begin{tabular}{ C{1.25in} C{.85in} *4{C{.75in}}}\toprule[1.5pt]
+\textbf{物种}                                                        & 酵母菌  & 秀丽线虫 & 草履虫   \\ \hline
+\textbf{\begin{tabular}[c]{@{}c@{}}Augustus\\ 预测基因数目\end{tabular}} & 5465 & 6445 & 12983 \\ 
+\bottomrule[1.25pt]
+\end {tabular}\par
+\bigskip
+\end{minipage}
+
+\subsubsection{GeneMark-ES的基因从头预测与结构建模（by 裘yu然）}
+文件准备与基因预测执行（by裘\yu 然）:
+
+将3个物种的基因组序列文件置于独立文件夹中，运行GeneMark-ES来执行基因预测：
+\begin{lstlisting}
+# 真菌需要添加独立的—fungus参数
+nohup ../gmes_petap.pl --seq paramecium_tetra.fna --ES --verbose --cores=2 --max_intergenic 10000 &
+nohup ../gmes_petap.pl --seq cae_elegans.fna --ES --verbose --cores=2 --max_intergenic 10000 &
+nohup ../gmes_petap.pl --seq Sac_cerevisiae.fna --ES --fungus --verbose --cores=2 --max_intergenic 10000 &
+
+\end{lstlisting}
+
+结果整理（by 裘\yu 然）:
+
+在文件夹中会生成一系列结果，其中生成需要的结果文件为genemark.gtf，GeneMark-ES生成gtf文件相较于gff3文件有一定程度的差异，且并不含有蛋白质序列的具体信息，只有位置信息。因此需要用到GeneMark-ES文件夹中的get\_sequence\_from\_GTF.pl来结合原始基因组序列来根据序列段获得蛋白质序列，并输出蛋白质序列结果文件。但是在使用该代码的时其一部分有关正则表达式的代码有不适用输出gtf文件的情况，经过修改后可以正常使用。
+
+对于三个物种的基因预测量分别如下：
+
+\begin{minipage}{\linewidth}
+\centering
+\captionof{table}{GeneMark-ES最终预测结果基因数目} \label{tab:title} 
+\begin{tabular}{ C{1.25in} C{.85in} *4{C{.75in}}}\toprule[1.5pt]
+\textbf{物种}                                                    & 酵母菌  & 秀丽线虫  & 草履虫   \\ \hline
+\textbf{\begin{tabular}[c]{@{}c@{}}GMES\\ 预测基因数目\end{tabular}} & 5471 & 22591 & 13800 \\ 
+\bottomrule[1.25pt]
+\end {tabular}\par
+\bigskip
+\end{minipage}
+
+
+最后经过处理可从gtf与fasta文件中提取出prot\_seq.faa蛋白质序列文件和nuc\_seq.fna。另外gtf在gffcompare中无法直接对比，因此需要进行转换。
+
+
+\subsubsection{Geneid的基因从头预测与结构建模（by郑宇翔）}
+该软件需要训练好的物种配置文件，geneid的网站上已经有了部分物种经训练获得的部分物种的配置文件。选择的配置文件如下所示：
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.9]{figs/geneid-files.PNG}
+\caption{geneid配置文件}
+\label{fig:geneid配置文件}
+\end{figure}
+
+
+其中，酿酒酵母(Saccharomyces cerevisiae)使用的是日本裂殖酵母(Schizosaccharomyces japonicus)的配置文件。而草履虫的配置文件只考虑TGA作为终止密码子。这可能会对最终预测的基因数量和准确度产生影响。
+
+使用geneid 1.4分别对三个物种进行预测，输入如下命令：
+\begin{lstlisting}
+../geneid -3P sjaponicus.param_Oct_12_2006 Sac_cerevisiae.fna > Sac_cerevisiae.gff3
+../geneid -3P ptetraurelia.param.Mar_5_2005 paramecium_tetra.fna > paramecium_tetra.gff3
+../geneid -3P celegans.param.Dec_20_2006 cae_elegans.fna > cae_elegans.gff3
+\end{lstlisting}
+从而得到gff3格式文件。
+
+但是该gff3文件没有包含蛋白质序列，尝试寻找可以输出蛋白质序列的方法。
+经查找资料，发现在1.4版本中，geneid去掉了可以直接输出蛋白质序列的功能，只有在较早版本（如1.2）中，才有可以直接输出序列的功能，且只能在软件自带的geneid格式文件中输出。
+使用geneid 1.2分别对三个物种进行预测，输入如下命令：
+\begin{lstlisting}
+../geneid -vP sjaponicus.param_Oct_12_2006 Sac_cerevisiae.fna > Sac_cerevisiae.geneid
+../geneid -vP ptetraurelia.param.Mar_5_2005 paramecium_tetra.fna > paramecium_tetra.geneid
+../geneid -vP celegans.param.Dec_20_2006 cae_elegans.fna > cae_elegans.geneid
+\end{lstlisting}
+
+另行编写python脚本将蛋白质序列从geneid文件中提取出来。预测得到的基因数量如下所示：
+
+\begin{minipage}{\linewidth}
+\centering
+\captionof{table}{Geneid最终预测结果基因数目} \label{tab:title} 
+\begin{tabular}{ C{1.25in} C{.85in} *4{C{.75in}}}\toprule[1.5pt]
+\textbf{物种}                                                    & 酵母菌  & 秀丽线虫  & 草履虫   \\ \hline
+\textbf{\begin{tabular}[c]{@{}c@{}}Geneid\\ 预测基因数目\end{tabular}} & 4073 & 5705 & 23386 \\
+\bottomrule[1.25pt]
+\end {tabular}\par
+\bigskip
+\end{minipage}
+
+根据目前的研究结果，酿酒酵母共有6275个基因,其中可能约有5800个真正具有功能；秀丽隐杆线虫有大约20000个基因；而草履虫有大约4万个基因。酿酒酵母和秀丽隐杆线虫的结果均较为接近，但geneid只预测出了4073个草履虫的基因，结果远少于实际情况，这可能是因为提供的模型只考虑TGA作为终止密码子所致。
+
+\subsection{预测结果的比较、挑选与整合（部分完成by李定洋、朱泽峰）}
+
+\subsubsection{各软件GFF文件经过重注释的结果与原GFF文件进行对比}
+
+首先是安装最新版gffcompare软件:
+
+\begin{lstlisting}
+$ git clone https://github.com/gpertea/gffcompare
+$ cd gffcompare
+$ make release
+\end{lstlisting}
+
+接着分别设定各个物种的参考GFF文件以及各个软件的对应GFF结果文件，运行gffcompare,命令运行示例如下:
+
+
+\begin{lstlisting}
+$ gffcompare -V -r $gff_sc_r $gff_sc_au -o augustus_compare_sc
+Prefix for output files: augustus_compare_sc
+Loading reference transcripts..
+  6445 reference transcripts loaded.
+  1 duplicate reference transcripts discarded.
+Warning: adjusted transcript g1570.t1 boundaries according to terminal exons.
+Warning: adjusted transcript g2180.t1 boundaries according to terminal exons.
+  5465 query transfrags loaded.
+Cleaning up..
+Done.
+\end{lstlisting}
+
+输出结果示例如下:
+
+\begin{lstlisting}
+$ ls augustus_compare_sc*
+augustus_compare_sc.annotated.gtf  augustus_compare_sc.stats
+augustus_compare_sc.loci           augustus_compare_sc.tracking
+\end{lstlisting}
+
+结果分析: ...
+
+
+可以看到:
+
+\begin{itemize}
+    \item 对于Saccharomyces cerevisiae，除去内含子层面的预测，Augustus在Precision层面(即给出的预测结果的正确率)以及Sensitivity层面(即正确预测出的结果于参考GFF中的占比)的预测都足够理想
+    \item 对于Caenorhabditis elegans，在Sensitivity层面的预测不够良好，即正确预测出的结果于参考GFF中的占比较低，且转录本层面的Precision也不够理想
+    \item 对于Paramecium tetraurelia，仅BaseLevel的Precision数值较高，其余数值都很低，说明Augustus选用的模型对于本次实验的数据材料存在比较明显的错配
+\end{itemize}
+
+
+\subsection{预测结果的序列提取以及比对分析与改良(by张书凡、朱泽峰)}
+
+
+
+\subsection{本地BLAST数据库的创建与同源基因搜索做格式转换（by李定洋）}
+
+
+
+\subsection{用对应程序将blast结果转化为gff3格式（by 李定洋）}
+
+
+
+\subsection{JBrowse的和 IGV的注释信息可视化（by张书凡）}
+
+\newpage
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}
