@@ -160,7 +160,7 @@ DNA序列分析是后基因组时代计算生物学的一个重要领域。从�
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.45]{figs/genomics_lab1_fig3.png}
+\includegraphics[scale=0.45]{figs/flowchart.drawio.png}
 \caption{实验流程图}
 \label{fig:任务流程图}
 \end{figure}
@@ -482,9 +482,7 @@ nohup ../gmes_petap.pl --seq Sac_cerevisiae.fna --ES --fungus --verbose --cores=
 
 根据目前的研究结果，酿酒酵母共有6275个基因,其中可能约有5800个真正具有功能；秀丽隐杆线虫有大约20000个基因；而草履虫有大约4万个基因。酿酒酵母和秀丽隐杆线虫的结果均较为接近，但geneid只预测出了4073个草履虫的基因，结果远少于实际情况，这可能是因为提供的模型只考虑TGA作为终止密码子所致。
 
-\subsection{预测结果的比较、挑选与整合（部分完成by李定洋、朱泽峰）}
-
-\subsubsection{各软件GFF文件经过重注释的结果与原GFF文件进行对比}
+\subsection{不同软件预测结果的比较、挑选与整合（by 李定洋、朱泽峰）}
 
 首先是安装最新版gffcompare软件:
 
@@ -494,12 +492,138 @@ $ cd gffcompare
 $ make release
 \end{lstlisting}
 
-接着分别设定各个物种的参考GFF文件以及各个软件的对应GFF结果文件，运行gffcompare,命令运行示例如下:
+接着利用gffcompare比较不同软件之间的预测结果，进行挑选与整合，此步骤有如下要点:
+
+\begin{itemize}
+    \item 解读.stats文件结果
+    \item 解读.combined.gtf文件结果
+    \item 对加入-R参数(要求完全重合)与未加入-R参数(允许局部重合)的结果进行对比
+    \item 两两共同特征的选择,而后进行挑选与整合
+\end{itemize}
+
+将上述步骤得到的各软件各物种的输出结果存放至规范文件夹workdir/gff\_of\_software中，存为如下所示:
+
+\begin{lstlisting}
+$ ll -ht /mnt/c/GitWorks/BIOI-ST/Genomics/gff_of_software/ | tail -n 10
+drwxrwxrwx 1 zzf zzf   512 Sep 18 12:01 ../
+-rwxrwxrwx 1 zzf zzf   16M Sep 18 11:31 para_gmes.gff3*
+-rwxrwxrwx 1 zzf zzf   21M Sep 18 11:29 ele_gmes.gff3*
+-rwxrwxrwx 1 zzf zzf  1.5M Sep 18 11:29 Sc_gmes.gff3*
+-rwxrwxrwx 1 zzf zzf  3.3M Sep 12 10:06 para_genid_addNota.gff3*
+-rwxrwxrwx 1 zzf zzf   52M Sep 12 10:05 ele_genid_addNota.gff3*
+-rwxrwxrwx 1 zzf zzf  4.2M Sep 12 10:03 Sc_genid_addNota.gff3*
+-rwxrwxrwx 1 zzf zzf   15M Sep 11 16:03 para_augustus_addNota.gff*
+-rwxrwxrwx 1 zzf zzf   12M Sep 11 16:02 ele_augustus_addNota.gff*
+-rwxrwxrwx 1 zzf zzf  5.2M Sep 11 16:00 Sc_augustus_addNota.gff*
+\end{lstlisting}
+
+接着进行不同软件间结果的对比，对于某一特定物种，依次取各个软件的结果作为参考GFF，且分别产出只考虑完全覆盖或反者的结果，得到如下文件:
+
+\begin{lstlisting}
+# 仅展示.stats文件
+$ ls
+AU_SC.stats AU_SC_R.stats 
+AU_PARA.stats   AU_PARA_R.stats 
+AU_ELE.stats    AU_ELE_R.stats
+GENEID_SC.stats GENEID_SC_R.stats 
+GENEID_PARA.stats   GENEID_PARA_R.stats 
+GENEID_ELE.stats    GENEID_ELE_R.stats
+GMES_SC.stats   GMES_SC_R.stats 
+GMES_PARA.stats GMES_PARA_R.stats 
+GMES_ELE.stats  GMES_ELE_R.stats
+\end{lstlisting}
+
+其中标识符有如下意义:
+
+\begin{itemize}
+    \item SC: 酿酒酵母
+    \item ELE: 秀丽线虫
+    \item PARA: 草履虫
+    \item GMES: GeneMark-ES输出结果
+    \item AU: Augustus输出结果
+    \item GENEID: Geneid输出结果
+    \item R尾缀: gffcompare带有-R参数，即只考虑完全覆盖
+    \item e.g. AU\_PARA\_R: 草履虫物种背景下，以Augustus软件输出结果为参考GFF，并且设置-R参数
+\end{itemize}
+
+对于同时得到的conbined.gff文件，鉴于我们是提供多个输入GTF/GFF文件得到的，其中包含每个样本中所有注释的并集。\citep{pmid32489650}
+
+利用如下python脚本对.stats文件内容进行提取并进行可视化:
+
+\begin{lstlisting}
+import re
+import pandas as pd
+from pathlib import Path
+
+pat = re.compile(r'\s+(.+):\s+(.+)\s+\|\s+(.+)\s+\|')
+f_pat = re.compile('#./gffcompare(.+\.g[a-z]f[0-9]{0,1})\s/mnt.+')
+
+def statpipeline(demo_file):
+    with open(demo_file, 'rt') as handle:
+        info_dict = defaultdict(list)
+        count = 4
+        for line in handle:
+            if line.startswith('#./gffcompare'):
+                if not f_pat.match(line):
+                    print(line)
+                fr = f_pat.match(line).group(1).split('/')[8]
+            elif line.startswith('#= Summary for dataset:'):
+                key = line.split('/')[-1].strip()
+            elif line.startswith('#-----------------| Sensitivity | Precision  |'):
+                count = 0
+                continue
+            if count < 3:
+                col, var1, var2 = pat.match(line).groups()
+                info_dict[key].append(dict(level=col, Sensitivity=float(var1), Precision=float(var2),ref=fr,fileName=demo_file.name))
+                count += 1
+
+    dfs = []
+    for key in info_dict:
+        df = pd.DataFrame(info_dict[key])
+        df['to'] = key
+        dfs.append(df)
+    return pd.concat(dfs,sort=False)
+
+folder = Path('./gff_compares_results/')
+all_df = pd.concat([statpipeline(file) for file in folder.iterdir() if file.suffix == '.stats'], ignore_index=True, sort=False)
+all_df['fileGroup'] = all_df['fileName'].str.split('_R').apply(lambda x: x[0].replace('.stats', ''))
+# Plot It
+import plotly.express as px
+fig = px.scatter(all_df, x="Sensitivity", y="Precision", color='level', symbol='fileGroup', hover_data=all_df.columns)
+fig.show()
+\end{lstlisting}
+
+表格示例如下表:
+
+\begin{minipage}{\linewidth}
+\centering
+\captionof{table}{stats文件信息提取} \label{tab:title} 
+\begin{tabular}{ C{0.55in} *6{C{0.75in}}}\toprule[1.5pt]
+\textbf{level} & \textbf{Sensitivity} & \textbf{Precision} & \textbf{ref}               & \textbf{fileName} & \textbf{to}              & \textbf{fileGroup} \\ \hline
+Base level     & 74.2                 & 27.9               & ele\_augustus & AU\_ELE     & ele\_genid & AU\_ELE            \\
+Exon level     & 64.3                 & 19.3               & ele\_augustus & AU\_ELE     & ele\_genid & AU\_ELE            \\
+Intron level   & 75.6                 & 23.1               & ele\_augustus & AU\_ELE     & ele\_genid & AU\_ELE            \\
+...            & ...                  & ...                & ...                        & ...               & ...                      & ...                \\
+Base level     & 99.0                 & 99.3               & Sac\_cerevisiae        & SC\_R       & Sc\_gmes            & SC                 \\
+\bottomrule[1.25pt]
+\end {tabular}\par
+\bigskip
+\end{minipage}
+
+
+
+从结果看到，以Augustus预测文件为参考GFF的结果在各个物种中普遍较差，而以GeneMark-ES或Geneid为参考GFF的结果的非Augustus相关的BaseLevel与ExonLevel相对较好。且值得注意，要求完全重合的结果与允许局部重合结果在评估上，于Sensitivity水平上都有些许提升，但是Precision无明显变化，这表明丢弃局部重合的结果后，各软件预测的结果更为符合参考GFF所标记的基因。但是值得指出的是上述情况中，草履虫的预测结果始终是最差的。
+
+鉴于Augustus的结果作为参考GFF的结果较差有些出乎意料，选择特定软件的为参考的combined gff步骤置于下面步骤进行(即两两共同特征的选择,而后进行挑选与整合步骤)。
+
+\subsection{各软件原始预测结果及整合预测结果与原GFF文件进行对比、分析异同、评估优劣与改良 (by 朱泽峰)}
+
+分别设定各个物种的参考GFF文件以及各个软件的对应GFF结果文件，运行gffcompare,命令运行示例如下:
 
 
 \begin{lstlisting}
-$ gffcompare -V -r $gff_sc_r $gff_sc_au -o augustus_compare_sc
-Prefix for output files: augustus_compare_sc
+$ gffcompare -R -V -r $gff_sc_r $gff_sc_au $gff_sc_gmes $gff_sc_geneid -o augustus_compare_sc
+Prefix for output files: SC_R
 Loading reference transcripts..
   6445 reference transcripts loaded.
   1 duplicate reference transcripts discarded.
@@ -513,13 +637,29 @@ Done.
 输出结果示例如下:
 
 \begin{lstlisting}
-$ ls augustus_compare_sc*
-augustus_compare_sc.annotated.gtf  augustus_compare_sc.stats
-augustus_compare_sc.loci           augustus_compare_sc.tracking
+$ ls SC_R*
+SC_R.conbined.gtf  SC_R.stats
+SC_R.loci           SC_R.tracking
 \end{lstlisting}
 
-结果分析: ...
+文件标识符意义同上述，差异在于(e.g.)SC\_R的意思是以酿酒酵母的原GFF文档为参考GFF，输入各个软件的原始预测结果进行预测，加入-R参数。
 
+\begin{figure}[htbp]
+\centering
+\subfigure[Augustus结果对比]{
+\includegraphics[width=10cm]{figs/tab_au_1.png}
+%\caption{fig1}
+}
+\quad
+\subfigure[GMES结果对比]{
+\includegraphics[width=10cm]{figs/tab_gmes_1.png}
+}
+\quad
+\subfigure[Geneid结果对比]{
+\includegraphics[width=10cm]{figs/tab_geneid_1.png}
+}
+\caption{不同软件结果与原始GFF对比}
+\end{figure}
 
 可以看到:
 
@@ -529,17 +669,71 @@ augustus_compare_sc.loci           augustus_compare_sc.tracking
     \item 对于Paramecium tetraurelia，仅BaseLevel的Precision数值较高，其余数值都很低，说明Augustus选用的模型对于本次实验的数据材料存在比较明显的错配
 \end{itemize}
 
+对于某一特定物种，分别把某一软件输出结果作为参考GFF的conbinded gff文档与原始GFF文档进行对比，运行如下命令:
 
-\subsection{预测结果的序列提取以及比对分析与改良(by张书凡、朱泽峰)}
+\begin{lstlisting}
+./gffcompare -R -V -r Sac_cerevisiae.gff \
+             AU_SC.combined.gtf AU_SC_R.combined.gtf \
+             GENEID_SC.combined.gtf \
+             GENEID_SC_R.combined.gtf \
+             GMES_SC.combined.gtf \
+             GMES_SC_R.combined.gtf \
+             -o CC_SC_R
+./gffcompare -V -r Sac_cerevisiae.gff \
+             AU_SC.combined.gtf \
+             AU_SC_R.combined.gtf \
+             GENEID_SC.combined.gtf \
+             GENEID_SC_R.combined.gtf \
+             GMES_SC.combined.gtf \
+             GMES_SC_R.combined.gtf \
+             -o CC_SC
+./gffcompare -V -r cae_elegans.gff \
+             AU_ELE.combined.gtf \
+             AU_ELE_R.combined.gtf \
+             GENEID_ELE.combined.gtf \
+             GENEID_ELE_R.combined.gtf \
+             GMES_ELE.combined.gtf \
+             GMES_ELE_R.combined.gtf \
+             -o CC_ELE
+./gffcompare -R -V -r cae_elegans.gff \
+             AU_ELE.combined.gtf \
+             AU_ELE_R.combined.gtf \
+             GENEID_ELE.combined.gtf \
+             GENEID_ELE_R.combined.gtf \
+             GMES_ELE.combined.gtf \
+             GMES_ELE_R.combined.gtf \
+             -o CC_ELE_R
+./gffcompare -R -V -r paramecium_tetra.gff \
+             AU_PARA.combined.gtf \
+             AU_PARA_R.combined.gtf \
+             GENEID_PARA.combined.gtf \
+             GENEID_PARA_R.combined.gtf \
+             GMES_PARA.combined.gtf \
+             GMES_PARA_R.combined.gtf \
+             -o CC_PARA_R
+./gffcompare -V -r paramecium_tetra.gff \
+             AU_PARA.combined.gtf \
+             AU_PARA_R.combined.gtf \
+             GENEID_PARA.combined.gtf \
+             GENEID_PARA_R.combined.gtf \
+             GMES_PARA.combined.gtf \
+             GMES_PARA_R.combined.gtf \
+             -o CC_PARA
+\end{lstlisting}
 
+以此与上述软件原输出的预测结果效果进行对比可以发现:
 
+\begin{itemize}
+    \item 对于酿酒酵母，于BaseLevel上的预测都较高，且注意到整合后相比于原始结果，precision都降低，但是sencisity升高
+    \item 对于秀丽线虫和草履虫，Augustus以为参考的整合GFF效果最差，GMES最好，Geneid次之
+    \item 对于草履虫，Geneid的Sensitivity明显较好
+\end{itemize}
+
+因此可以总结到，对于酿酒酵母，单纯用Augustus的预测结果最佳；对于秀丽线虫，以GeneMark-ES为预测结果为参考并整合Geneid、Augustus的结果最佳；对于草履虫，以Geneid的预测结果为参考并整合GeneMark-ES、Augustus的结果最佳。
+
+\subsection{预测结果的序列提取(by 张书凡)}
 
 \subsection{本地BLAST数据库的创建与同源基因搜索做格式转换（by李定洋）}
-
-
-
-\subsection{用对应程序将blast结果转化为gff3格式（by 李定洋）}
-
 
 
 \subsection{JBrowse的和 IGV的注释信息可视化（by张书凡）}

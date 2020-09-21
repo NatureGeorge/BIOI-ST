@@ -1,0 +1,100 @@
+ 1561  ls
+ 1562  mkdir temp
+ 1563  cd temp/
+ 1564  ls
+ 1565  wget https://modbase.compbio.ucsf.edu/modbase-cgi/retrieve/modbase/?databaseID=P51587
+ 1566  ls
+ 1567  vi 'index.html?databaseID=P51587' 
+ 1568  vi 'index.html?databaseID=P51587' > P51587.xml
+ 1569  cd temp/
+ 1570  wget -h
+ 1571  wget https://modbase.compbio.ucsf.edu/modbase-cgi/retrieve/modbase/?databaseID=P51587 -O P51587.xml
+ 1572  ls
+ 1573  rm 'index.html?databaseID=P51587' 
+ 1574  ls
+ 1575  vi P51587.xml 
+ 1576  ls
+ 1577  cd temp/
+ 1578  curl -X GET --header 'Accept:application/json' 'https://www.ebi.ac.uk/proteins/api/proteins/P22557/isoforms'
+ 1579  curl -X GET --header 'Accept:application/json' 'https://www.ebi.ac.uk/proteins/api/proteins/P22557/isoforms' > P22557.json
+ 1580  ls
+ 1581  ll -ht
+ 1582  vi P22557.json 
+ 1583  mv P22557.json /mnt/c/Users/Nature/Downloads/
+ 1584  curl -X GET --header 'Accept:application/json' 'https://www.ebi.ac.uk/proteins/api/proteins/Ensembl:ENST00000335137?offset=0&reviewed=true' > ENST00000335137.json
+ 1585  ls
+ 1586  vi ENST00000335137.json 
+ 1587  cat ENST00000335137.json 
+ 1588  mv ENST00000335137.json /mnt/c/Users/Nature/Downloads/
+ 1589  curl -X GET --header 'Accept:application/json' 'https://www.ebi.ac.uk/proteins/api/proteins/Ensembl:ENSG00000186092?offset=0&reviewed=true' > ENSG00000186092.json
+ 1590  mv ENSG00000186092.json /mnt/c/Users/Nature/Downloads/
+ 1591  cd temp/
+ 1592  curl -X GET --header 'Accept:application/xml' 'https://www.ebi.ac.uk/proteins/api/proteins/Ensembl:ENSG00000186092?offset=0&reviewed=true' > ENSG00000186092.xml
+ 1593  ls
+ 1594  vi ENSG00000186092.xml 
+ 1595  mv ENSG00000186092.xml /mnt/c/Users/Nature/Downloads/
+ 1596  pip install dataset
+ 1597  pip3 install dataset
+ 1598  logout
+ 1599  python
+ 1600  python3
+ 1601  ipython
+ 1602  pip3 install lark
+ 1603  pip3 uninstall lark
+ 1604  pip install lark-parser --upgrade
+ 1605  pip3 install lark-parser --upgrade
+ 1606  ls
+ 1607  cd software/
+ 1608  ls
+ 1609  ll -ht
+ 1610  ./gffcompare
+ 1611  cd ./gffcompare/
+ 1612  ./gffcompare
+ 1613  ;s
+ 1614  ls
+ 1615  workdir=/mnt/c/GitWorks/BIOI-ST/Genomics/
+ 1616  ls $workdir
+ 1617  ls $workdir/gff_of_software
+ 1618  ls $workdir/gff_of_raw
+ 1619  ./gffcompare -V -r $workdir/gff_of_raw/Sac_cerevisiae.gff -i $workdir/Sc_augustus_addNota.gff $workdir/Sc_genid_addNota.gff3 $workdir/Sc_gmes.gff3 -o $workdir/gff_compares_results/SC_
+ 1620  wc -l /mnt/c/GitWorks/BIOI-ST/Genomics//Sc_augustus_addNota.gff
+ 1621  ./gffcompare -V -r $workdir/gff_of_raw/Sac_cerevisiae.gff -i $workdir/gff_of_software/Sc_augustus_addNota.gff $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_gmes.gff3 -o $workdir/gff_compares_results/SC_
+ 1622  ./gffcompare -V -i $workdir/gff_of_software/Sc_augustus_addNota.gff $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_gmes.gff3 -o $workdir/gff_compares_results/SC_
+ 1623  ./gffcompare -V -r $workdir/gff_of_raw/Sac_cerevisiae.gff $workdir/gff_of_software/Sc_augustus_addNota.gff $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_gmes.gff3 -o $workdir/gff_compares_results/SC_
+ 1624  ./gffcompare -V -r $workdir/gff_of_raw/cae_elegans.gff $workdir/gff_of_software/ele_augustus_addNota.gff $workdir/gff_of_software/ele_genid_addNota.gff3 $workdir/gff_of_software/ele_gmes.gff3 -o $workdir/gff_compares_results/ELE_
+ 1625  ./gffcompare -V -r $workdir/gff_of_raw/paramecium_tetra.gff $workdir/gff_of_software/para_augustus_addNota.gff $workdir/gff_of_software/para_genid_addNota.gff3 $workdir/gff_of_software/para_gmes.gff3 -o $workdir/gff_compares_results/PARA_
+ 1626  ./gffcompare
+ 1627  ./gffcompare -V -R -r $workdir/gff_of_raw/paramecium_tetra.gff $workdir/gff_of_software/para_augustus_addNota.gff $workdir/gff_of_software/para_genid_addNota.gff3 $workdir/gff_of_software/para_gmes.gff3 -o $workdir/gff_compares_results/PARA_R
+ 1628  ./gffcompare -R -V -r $workdir/gff_of_raw/cae_elegans.gff $workdir/gff_of_software/ele_augustus_addNota.gff $workdir/gff_of_software/ele_genid_addNota.gff3 $workdir/gff_of_software/ele_gmes.gff3 -o $workdir/gff_compares_results/ELE_R
+ 1629  ./gffcompare -R -V -r $workdir/gff_of_raw/Sac_cerevisiae.gff $workdir/gff_of_software/Sc_augustus_addNota.gff $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_gmes.gff3 -o $workdir/gff_compares_results/SC_R
+ 1630  ./gffcompare
+ 1631  ./gffcompare -R -V -r $workdir/gff_of_software/Sc_augustus_addNota.gff $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_gmes.gff3 -o $workdir/gff_compares_results/AU_SC_R
+ 1632  ./gffcompare -V -r $workdir/gff_of_software/Sc_augustus_addNota.gff $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_gmes.gff3 -o $workdir/gff_compares_results/AU_SC
+ 1633  ./gffcompare -R -V -r $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_augustus_addNota.gff $workdir/gff_of_software/Sc_gmes.gff3 -o $workdir/gff_compares_results/GENEID_SC_R
+ 1634  ./gffcompare -V -r $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_augustus_addNota.gff $workdir/gff_of_software/Sc_gmes.gff3 -o $workdir/gff_compares_results/GENEID_SC
+ 1635  ./gffcompare -V -r $workdir/gff_of_software/Sc_gmes.gff3 $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_augustus_addNota.gff -o $workdir/gff_compares_results/GMES_SC
+ 1636  ./gffcompare -R -V -r $workdir/gff_of_software/Sc_gmes.gff3 $workdir/gff_of_software/Sc_genid_addNota.gff3 $workdir/gff_of_software/Sc_augustus_addNota.gff -o $workdir/gff_compares_results/GMES_SC_R
+ 1637  ./gffcompare -R -V -r $workdir/gff_of_software/ele_augustus_addNota.gff $workdir/gff_of_software/ele_genid_addNota.gff3 $workdir/gff_of_software/ele_gmes.gff3 -o $workdir/gff_compares_results/AU_ELE_R
+ 1638  ./gffcompare -V -r $workdir/gff_of_software/ele_augustus_addNota.gff $workdir/gff_of_software/ele_genid_addNota.gff3 $workdir/gff_of_software/ele_gmes.gff3 -o $workdir/gff_compares_results/AU_ELE
+ 1639  ./gffcompare -R -V -r $workdir/gff_of_software/ele_genid_addNota.gff3 $workdir/gff_of_software/ele_augustus_addNota.gff $workdir/gff_of_software/ele_gmes.gff3 -o $workdir/gff_compares_results/GENEID_ELE_R
+ 1640  ./gffcompare -V -r $workdir/gff_of_software/ele_genid_addNota.gff3 $workdir/gff_of_software/ele_augustus_addNota.gff $workdir/gff_of_software/ele_gmes.gff3 -o $workdir/gff_compares_results/GENEID_ELE
+ 1641  ./gffcompare -V -r $workdir/gff_of_software/ele_gmes.gff3 $workdir/gff_of_software/ele_genid_addNota.gff3 $workdir/gff_of_software/ele_augustus_addNota.gff -o $workdir/gff_compares_results/GMES_ELE
+ 1642  ./gffcompare -R -V -r $workdir/gff_of_software/ele_gmes.gff3 $workdir/gff_of_software/ele_genid_addNota.gff3 $workdir/gff_of_software/ele_augustus_addNota.gff -o $workdir/gff_compares_results/GMES_ELE_R
+ 1643  ./gffcompare -V -r $workdir/gff_of_software/para_augustus_addNota.gff $workdir/gff_of_software/para_genid_addNota.gff3 $workdir/gff_of_software/para_gmes.gff3 -o $workdir/gff_compares_results/AU_PARA
+ 1644  ./gffcompare -R -V -r $workdir/gff_of_software/para_augustus_addNota.gff $workdir/gff_of_software/para_genid_addNota.gff3 $workdir/gff_of_software/para_gmes.gff3 -o $workdir/gff_compares_results/AU_PARA_R
+ 1645  ./gffcompare -R -V -r $workdir/gff_of_software/para_genid_addNota.gff3 $workdir/gff_of_software/para_augustus_addNota.gff $workdir/gff_of_software/para_gmes.gff3 -o $workdir/gff_compares_results/GENEID_PARA_R
+ 1646  ./gffcompare -V -r $workdir/gff_of_software/para_genid_addNota.gff3 $workdir/gff_of_software/para_augustus_addNota.gff $workdir/gff_of_software/para_gmes.gff3 -o $workdir/gff_compares_results/GENEID_PARA
+ 1647  ./gffcompare -V -r $workdir/gff_of_software/para_gmes.gff3 $workdir/gff_of_software/para_genid_addNota.gff3 $workdir/gff_of_software/para_augustus_addNota.gff -o $workdir/gff_compares_results/GMES_PARA
+ 1648  ./gffcompare -V -R -r $workdir/gff_of_software/para_gmes.gff3 $workdir/gff_of_software/para_genid_addNota.gff3 $workdir/gff_of_software/para_augustus_addNota.gff -o $workdir/gff_compares_results/GMES_PARA_R
+ 1649  ls \mnt\c\GitWorks\BIOI-ST\Genomics\gff_compares_results\*com*
+ 1650  ls /mnt/c/GitWorks/BIOI-ST/Genomics/gff_compares_results/*com*
+ 1651  ./gffcompare -R -V -r $workdir/gff_of_raw/Sac_cerevisiae.gff $workdir/gff_compares_results/AU_SC.combined.gtf $workdir/gff_compares_results/AU_SC_R.combined.gtf $workdir/gff_compares_results/GENEID_SC.combined.gtf  $workdir/gff_compares_results/GENEID_SC_R.combined.gtf $workdir/gff_compares_results/GMES_SC.combined.gtf $workdir/gff_compares_results/GMES_SC_R.combined.gtf -o $workdir/gff_compares_results/CC_SC_R
+ 1652  ./gffcompare -V -r $workdir/gff_of_raw/Sac_cerevisiae.gff $workdir/gff_compares_results/AU_SC.combined.gtf $workdir/gff_compares_results/AU_SC_R.combined.gtf $workdir/gff_compares_results/GENEID_SC.combined.gtf  $workdir/gff_compares_results/GENEID_SC_R.combined.gtf $workdir/gff_compares_results/GMES_SC.combined.gtf $workdir/gff_compares_results/GMES_SC_R.combined.gtf -o $workdir/gff_compares_results/CC_SC
+ 1653  ./gffcompare -V -r $workdir/gff_of_raw/cae_elegans.gff $workdir/gff_compares_results/AU_ELE.combined.gtf $workdir/gff_compares_results/AU_ELE_R.combined.gtf $workdir/gff_compares_results/GENEID_ELE.combined.gtf  $workdir/gff_compares_results/GENEID_ELE_R.combined.gtf $workdir/gff_compares_results/GMES_ELE.combined.gtf $workdir/gff_compares_results/GMES_ELE_R.combined.gtf -o $workdir/gff_compares_results/CC_ELE
+ 1654  ./gffcompare -R -V -r $workdir/gff_of_raw/cae_elegans.gff $workdir/gff_compares_results/AU_ELE.combined.gtf $workdir/gff_compares_results/AU_ELE_R.combined.gtf $workdir/gff_compares_results/GENEID_ELE.combined.gtf  $workdir/gff_compares_results/GENEID_ELE_R.combined.gtf $workdir/gff_compares_results/GMES_ELE.combined.gtf $workdir/gff_compares_results/GMES_ELE_R.combined.gtf -o $workdir/gff_compares_results/CC_ELE_R
+ 1655  ./gffcompare -R -V -r $workdir/gff_of_raw/paramecium_tetra.gff $workdir/gff_compares_results/AU_PARA.combined.gtf $workdir/gff_compares_results/AU_PARA_R.combined.gtf $workdir/gff_compares_results/GENEID_PARA.combined.gtf  $workdir/gff_compares_results/GENEID_PARA_R.combined.gtf $workdir/gff_compares_results/GMES_PARA.combined.gtf $workdir/gff_compares_results/GMES_PARA_R.combined.gtf -o $workdir/gff_compares_results/CC_PARA_R
+ 1656  ./gffcompare -V -r $workdir/gff_of_raw/paramecium_tetra.gff $workdir/gff_compares_results/AU_PARA.combined.gtf $workdir/gff_compares_results/AU_PARA_R.combined.gtf $workdir/gff_compares_results/GENEID_PARA.combined.gtf  $workdir/gff_compares_results/GENEID_PARA_R.combined.gtf $workdir/gff_compares_results/GMES_PARA.combined.gtf $workdir/gff_compares_results/GMES_PARA_R.combined.gtf -o $workdir/gff_compares_results/CC_PARA
+ 1657  ls
+ 1658  history 25
+ 1659  history 50
+ 1660  history 100 > /mnt/c/Download/command_history.log
